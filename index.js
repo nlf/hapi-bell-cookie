@@ -52,6 +52,9 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/',
         config: {
+            // why is this required?
+            // and why does 'session' not work here?
+            // also: argh
             auth: 'twitter',
             handler: function (request, reply) {
                 if(request.auth.isAuthenticated) {
@@ -70,6 +73,8 @@ server.register([Bell, Cookie], function (err) {
         path: '/session',
         config: {
             auth: 'twitter',
+            // why is this required?
+            // and why does 'session' not work here?
             handler: function (request, reply) {
                 if (request.auth.isAuthenticated) {
                     reply(nav + '<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
