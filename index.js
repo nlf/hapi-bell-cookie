@@ -40,8 +40,15 @@ server.register([Bell, Cookie], function (err) {
         config: {
             auth: 'twitter',
             handler: function (request, reply) {
+                var profile = {
+                    token: request.auth.credentials.token,
+                    secret: request.auth.credentials.secret,
+                    id: request.auth.credentials.profile.id,
+                    username: request.auth.credentials.profile.username,
+                    displayName: request.auth.credentials.profile.displayName,
+                };
                 request.auth.session.clear();
-                request.auth.session.set(request.auth.credentials);
+                request.auth.session.set(profile);
                 return reply.redirect('/session');
 
             }
@@ -52,7 +59,7 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/',
         config: {
-            auth: 'twitter', // why does 'session' not work here?
+            auth: 'session', // why does 'session' not work here?
             handler: function (request, reply) {
                 if(request.auth.isAuthenticated) {
                     var profile = request.auth.credentials.profile
@@ -69,7 +76,7 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/session',
         config: {
-            auth: 'twitter', // why does 'session' not work here?
+            auth: 'session', // why does 'session' not work here?
             handler: function (request, reply) {
                 if (request.auth.isAuthenticated) {
                     reply(nav + '<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
