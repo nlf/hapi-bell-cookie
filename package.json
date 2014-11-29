@@ -1,0 +1,17 @@
+{
+  "name": "hapi-bell-cookie",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bell": "^2.0.0-rc1",
+    "hapi": "^8.0.0-rc5",
+    "getconfig": "^1.0.0",
+    "hapi-auth-cookie": "^2.0.0-rc1"
+  }
+}
