@@ -20,9 +20,9 @@ server.register([Bell, Cookie], function (err) {
 
     server.auth.strategy('twitter', 'bell', {
         provider: 'twitter',
-        password: config.auth.password,
+        password: config.auth.twitter.password,
         isSecure: false,
-        clientId: config.auth.twitter.clientID,
+        clientId: config.auth.twitter.clientId,
         clientSecret: config.auth.twitter.clientSecret
     });
 
@@ -42,8 +42,7 @@ server.register([Bell, Cookie], function (err) {
             handler: function (request, reply) {
                 request.auth.session.clear();
                 request.auth.session.set(request.auth.credentials);
-
-                return reply.redirect('/');
+                return reply.redirect('/session');
 
             }
         }
@@ -53,12 +52,8 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/',
         config: {
-            auth: {
-                strategy: 'twitter',
-                // mode: 'try'
-            },
+            auth: 'twitter',
             handler: function (request, reply) {
-                console.log(request.auth.isAuthenticated);
                 if(request.auth.isAuthenticated) {
                     var profile = request.auth.credentials.profile
                     reply(nav + '<h1>Hello, ' + profile.displayName + '</h1>')
@@ -66,8 +61,6 @@ server.register([Bell, Cookie], function (err) {
                 else {
                     reply(nav + '<h1>Hello</h1><p>You should <a href="/login">log in</a>.</p>')
                 }
-                // var profile = request.auth.credentials.profile
-                // reply(nav + '<h1>Hello, ' + profile.displayName + '</h1>')
             }
         }
     });    
@@ -76,12 +69,8 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/session',
         config: {
-            auth: {
-                strategy: 'twitter',
-                // mode: 'try'  
-            },
+            auth: 'twitter',
             handler: function (request, reply) {
-                console.log(request.auth.isAuthenticated);
                 if (request.auth.isAuthenticated) {
                     reply(nav + '<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
                 }

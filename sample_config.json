@@ -12,11 +12,13 @@
             "failureFlash": true
         },
         "twitter": {
-            "clientID": "woo",
-            "clientSecret": "woooo",
-            "callbackURL": "http://localhost:7000/login"
-        },
-        "password": "whatwhatwhat"
+            "provider": "twitter",
+            "password": "bloop",
+            "isSecure": "false",
+            "clientID": "bleep",
+            "clientSecret": "blorp",
+            "callbackURL": "http://localhost:7000/authenticate"
+        }
     },
     "session": {
         "cookieOptions": {
