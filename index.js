@@ -1,6 +1,7 @@
 var Hapi = require('hapi');
 var Bell = require('bell');
 var Cookie = require('hapi-auth-cookie');
+var Yar = require('yar');
 var config = require('getconfig');
 
 var server = new Hapi.Server();
@@ -12,7 +13,7 @@ server.connection({
     port: config.port 
 });
 
-server.register([Bell, Cookie], function (err) {
+server.register([Bell, { register: Yar, options: config.session } ], function (err) {
 
     if (err) {
         throw err;
@@ -26,23 +27,14 @@ server.register([Bell, Cookie], function (err) {
         clientSecret: config.auth.twitter.clientSecret
     });
 
-    server.auth.strategy('session', 'cookie', {
-        password: config.session.cookieOptions.password,
-        cookie: 'sid',
-        redirectTo: '/login',
-        redirectOnTry: false,
-        isSecure: false
-    })
-
     server.route({
         method: ['GET', 'POST'],
         path: '/login',
         config: {
             auth: 'twitter',
             handler: function (request, reply) {
-                request.auth.session.clear();
-                request.auth.session.set(request.auth.credentials);
-                return reply.redirect('/session');
+                console.log('session', JSON.stringify(request.session, null, 2));
+                return reply.redirect('/');
 
             }
         }
@@ -52,10 +44,10 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/',
         config: {
-            auth: 'twitter',
             handler: function (request, reply) {
-                if(request.auth.isAuthenticated) {
-                    var profile = request.auth.credentials.profile
+                // console.log('session', request.session);
+                if(request.session.user) {
+                    var profile = request.session.user.profile
                     reply(nav + '<h1>Hello, ' + profile.displayName + '</h1>')
                 }
                 else {
@@ -71,11 +63,12 @@ server.register([Bell, Cookie], function (err) {
         config: {
             auth: 'twitter',
             handler: function (request, reply) {
-                if (request.auth.isAuthenticated) {
-                    reply(nav + '<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
+                // console.log(request.session);
+                if (request.session) {
+                    reply(nav + '<h1>Session</h1><pre>' + JSON.stringify(request.session, null, 4) + '</pre>');
                 }
                 else {
-                    reply(nav + '<h1>Session</h1>' + '<pre>' + JSON.stringify(request.auth.session, null, 4) + '</pre>' + '<p>You should <a href="/login">log in</a>.</p>')
+                    reply(nav + '<h1>Session</h1>' + '<pre>' + JSON.stringify(request.session, null, 4) + '</pre>' + '<p>You should <a href="/login">log in</a>.</p>')
                 }
                 
             }

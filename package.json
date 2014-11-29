@@ -13,6 +13,7 @@
     "bell": "^2.0.0-rc1",
     "hapi": "^8.0.0-rc5",
     "getconfig": "^1.0.0",
-    "hapi-auth-cookie": "^2.0.0-rc1"
+    "hapi-auth-cookie": "^2.0.0-rc1",
+    "yar": "^3.0.0-rc1"
   }
 }
